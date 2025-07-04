@@ -1,27 +1,30 @@
+// Paquete handlers define la capa HTTP de la aplicación.
+// Aquí se manejan las rutas y se transforman las peticiones en
+// llamadas al servicio de dominios.
 package handlers
 
 import (
-	"encoding/json"
-	"io/ioutil"
-	"net/http"
-	"strings"
+	"encoding/json" // serialización y deserialización de objetos JSON
+	"io/ioutil"     // lectura conveniente del cuerpo de las peticiones
+	"net/http"      // servidor y utilidades HTTP
+	"strings"       // manejo de rutas y parámetros
 
 	"goserver/internal/application/dto"
 	"goserver/internal/application/services"
 	"goserver/internal/domain/entities"
 )
 
-// RoleHandler handles HTTP requests for roles.
+// RoleHandler maneja las peticiones HTTP relacionadas con los roles.
 type RoleHandler struct {
 	Service *services.RoleService
 }
 
-// NewRoleHandler creates a new RoleHandler instance.
+// NewRoleHandler crea una instancia de RoleHandler.
 func NewRoleHandler(s *services.RoleService) *RoleHandler {
 	return &RoleHandler{Service: s}
 }
 
-// Register attaches handler routes to the provided ServeMux.
+// Register registra las rutas en el *http.ServeMux proporcionado.
 func (h *RoleHandler) Register(mux *http.ServeMux) {
 	mux.HandleFunc("/roles/permissions", h.GetPermissions)
 	mux.HandleFunc("/roles/create", h.Create)
@@ -29,14 +32,14 @@ func (h *RoleHandler) Register(mux *http.ServeMux) {
 	mux.HandleFunc("/roles/", h.RoleByID)
 }
 
-// writeJSON is a small helper to respond with JSON.
+// writeJSON es un pequeño ayudante para enviar respuestas JSON.
 func (h *RoleHandler) writeJSON(w http.ResponseWriter, status int, data interface{}) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)
 	_ = json.NewEncoder(w).Encode(data)
 }
 
-// GetPermissions returns the list of available permissions.
+// GetPermissions devuelve la lista de permisos disponibles.
 func (h *RoleHandler) GetPermissions(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		w.WriteHeader(http.StatusMethodNotAllowed)
@@ -45,7 +48,7 @@ func (h *RoleHandler) GetPermissions(w http.ResponseWriter, r *http.Request) {
 	h.writeJSON(w, http.StatusOK, entities.ModulosPermisos)
 }
 
-// Roles handles listing and querying roles.
+// Roles maneja la consulta de roles y búsqueda paginada.
 func (h *RoleHandler) Roles(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodGet:
@@ -73,7 +76,7 @@ func (h *RoleHandler) Roles(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// Create registers a new role.
+// Create registra un nuevo rol.
 func (h *RoleHandler) Create(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		w.WriteHeader(http.StatusMethodNotAllowed)
@@ -92,7 +95,7 @@ func (h *RoleHandler) Create(w http.ResponseWriter, r *http.Request) {
 	h.writeJSON(w, http.StatusCreated, role)
 }
 
-// RoleByID handles operations on a single role.
+// RoleByID maneja las operaciones sobre un rol puntual.
 func (h *RoleHandler) RoleByID(w http.ResponseWriter, r *http.Request) {
 	id := strings.TrimPrefix(r.URL.Path, "/roles/")
 	if id == "" {

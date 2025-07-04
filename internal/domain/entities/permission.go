@@ -1,7 +1,7 @@
 package entities
 
-// Permission represents a permission in the system.
-// It can have nested permissions to build a tree structure.
+// Permission describe un permiso en el sistema.
+// Puede tener permisos anidados para construir una estructura en árbol.
 type Permission struct {
 	Name        string       `json:"name"`
 	Title       string       `json:"title"`
@@ -10,7 +10,7 @@ type Permission struct {
 	Permissions []Permission `json:"permissions,omitempty"`
 }
 
-// HasNestedPermissions returns true if the permission has nested permissions.
+// HasNestedPermissions devuelve true si existen permisos anidados.
 func (p Permission) HasNestedPermissions() bool {
 	return len(p.Permissions) > 0
 }

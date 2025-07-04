@@ -1,7 +1,7 @@
 package dto
 
-// PaginationQuery defines parameters used for paginated queries.
-// Generic type T allows passing filter structures specific to each use case.
+// PaginationQuery define los parámetros utilizados en consultas paginadas.
+// El tipo genérico T permite pasar estructuras de filtros específicas.
 type PaginationQuery[T any] struct {
 	Page    int      `json:"page"`
 	Limit   int      `json:"limit"`
@@ -10,7 +10,7 @@ type PaginationQuery[T any] struct {
 	Filters T        `json:"filters"`
 }
 
-// PaginationMeta describes pagination information about a result set.
+// PaginationMeta describe información de paginación del conjunto de resultados.
 type PaginationMeta struct {
 	Total int `json:"total"`
 	Limit int `json:"limit"`
@@ -18,7 +18,7 @@ type PaginationMeta struct {
 	Page  int `json:"page"`
 }
 
-// PaginatedResult wraps a slice of items with pagination metadata.
+// PaginatedResult envuelve un listado de elementos junto con la metainformación de paginación.
 type PaginatedResult[T any] struct {
 	Data []T            `json:"data"`
 	Meta PaginationMeta `json:"meta"`
