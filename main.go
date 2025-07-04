@@ -1,3 +1,6 @@
+// Programa principal que inicia el servidor HTTP y conecta las piezas de la
+// aplicación. Este archivo demuestra un ejemplo sencillo de cómo inicializar
+// dependencias y exponer endpoints REST en Go.
 package main
 
 import (
@@ -9,7 +12,7 @@ import (
 	handlers "goserver/internal/interfaces/http"
 )
 
-// main wires the application and starts the HTTP server.
+// main configura las dependencias y arranca el servidor HTTP.
 func main() {
 	repository := repo.NewMemoryRoleRepository()
 	service := services.NewRoleService(repository)

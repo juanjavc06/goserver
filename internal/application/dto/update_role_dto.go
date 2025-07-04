@@ -1,7 +1,7 @@
 package dto
 
-// UpdateRoleDto represents the allowed fields for updating a role.
-// All fields are optional and nil values will be ignored.
+// UpdateRoleDto representa los campos permitidos para actualizar un rol.
+// Todos los campos son opcionales y los valores nil se ignoran.
 type UpdateRoleDto struct {
 	Name        *string  `json:"name"`
 	Description *string  `json:"description"`

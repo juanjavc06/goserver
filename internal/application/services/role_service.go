@@ -1,26 +1,28 @@
+// Paquete services contiene la lógica de negocio de la aplicación.
+// RoleService orquesta las operaciones relacionadas con los roles.
 package services
 
 import (
-	"errors"
-	"goserver/internal/application/dto"
-	"goserver/internal/application/mappers"
+	"errors"                                // manejo de errores con la librería estándar
+	"goserver/internal/application/dto"     // estructuras de entrada/salida
+	"goserver/internal/application/mappers" // conversión entre DTOs y entidades
 	"goserver/internal/domain/entities"
 	derrors "goserver/internal/domain/errors"
 	"goserver/internal/domain/repositories"
 )
 
-// RoleService provides business logic around roles
+// RoleService provee la lógica de negocio relacionada con los roles.
 
 type RoleService struct {
 	Repo repositories.RoleRepository
 }
 
-// NewRoleService creates a new RoleService instance.
+// NewRoleService devuelve una nueva instancia de RoleService.
 func NewRoleService(r repositories.RoleRepository) *RoleService {
 	return &RoleService{Repo: r}
 }
 
-// CreateRole persists a new role using the repository.
+// CreateRole persiste un nuevo rol utilizando el repositorio.
 func (s *RoleService) CreateRole(input dto.CreateRoleDto) (*entities.Role, error) {
 	role := mappers.MapCreateRoleDtoToRole(input)
 	created, err := s.Repo.Create(role)
@@ -33,12 +35,12 @@ func (s *RoleService) CreateRole(input dto.CreateRoleDto) (*entities.Role, error
 	return created, nil
 }
 
-// FindAllRoles retrieves all roles from the repository.
+// FindAllRoles obtiene todos los roles del repositorio.
 func (s *RoleService) FindAllRoles() ([]*entities.Role, error) {
 	return s.Repo.FindAll()
 }
 
-// FindRoleByID fetches a role by its identifier.
+// FindRoleByID busca un rol por su identificador.
 func (s *RoleService) FindRoleByID(id string) (*entities.Role, error) {
 	role, err := s.Repo.FindByID(id)
 	if err != nil {
@@ -50,7 +52,7 @@ func (s *RoleService) FindRoleByID(id string) (*entities.Role, error) {
 	return role, nil
 }
 
-// UpdateRole updates an existing role with the provided data.
+// UpdateRole actualiza un rol existente con los datos proporcionados.
 func (s *RoleService) UpdateRole(id string, input dto.UpdateRoleDto) (*entities.Role, error) {
 	role, err := s.Repo.FindByID(id)
 	if err != nil {
@@ -70,7 +72,7 @@ func (s *RoleService) UpdateRole(id string, input dto.UpdateRoleDto) (*entities.
 	return updated, nil
 }
 
-// DeleteRole removes a role by ID.
+// DeleteRole elimina un rol por su ID.
 func (s *RoleService) DeleteRole(id string) (*entities.Role, error) {
 	role, err := s.Repo.FindByID(id)
 	if err != nil {
@@ -89,7 +91,7 @@ func (s *RoleService) DeleteRole(id string) (*entities.Role, error) {
 	return deleted, nil
 }
 
-// GetRoles returns a paginated list of roles matching the query.
+// GetRoles retorna una lista paginada de roles según la consulta.
 func (s *RoleService) GetRoles(q dto.PaginationQuery[dto.RoleFiltersDto]) (*dto.PaginatedResult[*entities.Role], error) {
 	return s.Repo.FindPaginated(&q)
 }

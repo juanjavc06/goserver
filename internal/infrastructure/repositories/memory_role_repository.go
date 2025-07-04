@@ -1,24 +1,27 @@
+// Paquete repositories contiene implementaciones concretas de los
+// repositorios de dominio. En este caso se define una versión en memoria
+// que se utiliza para pruebas o aplicaciones pequeñas.
 package repositories
 
 import (
-	"fmt"
-	"strings"
-	"sync"
+	"fmt"     // formateo de cadenas para generar identificadores
+	"strings" // utilidades de búsqueda y comparación
+	"sync"    // primitiva de exclusión para concurrencia segura
 
 	"goserver/internal/application/dto"
 	"goserver/internal/domain/entities"
 	derrors "goserver/internal/domain/errors"
 )
 
-// MemoryRoleRepository implements RoleRepository with an in-memory map.
-// It is safe for concurrent use in tests or small applications.
+// MemoryRoleRepository implementa RoleRepository utilizando un mapa en memoria.
+// Es seguro para concurrencia y resulta útil en pruebas o aplicaciones pequeñas.
 type MemoryRoleRepository struct {
 	mu     sync.Mutex
 	roles  map[string]*entities.Role
 	nextID int
 }
 
-// NewMemoryRoleRepository creates a new in-memory role repository.
+// NewMemoryRoleRepository crea un nuevo repositorio de roles en memoria.
 func NewMemoryRoleRepository() *MemoryRoleRepository {
 	return &MemoryRoleRepository{
 		roles:  make(map[string]*entities.Role),
@@ -26,14 +29,14 @@ func NewMemoryRoleRepository() *MemoryRoleRepository {
 	}
 }
 
-// generateID generates an incremental identifier.
+// generateID genera un identificador incremental.
 func (r *MemoryRoleRepository) generateID() string {
 	id := fmt.Sprintf("%d", r.nextID)
 	r.nextID++
 	return id
 }
 
-// Create saves a new role in memory ensuring unique names.
+// Create guarda un nuevo rol en memoria asegurando que el nombre sea único.
 func (r *MemoryRoleRepository) Create(role *entities.Role) (*entities.Role, error) {
 	r.mu.Lock()
 	defer r.mu.Unlock()
@@ -48,7 +51,7 @@ func (r *MemoryRoleRepository) Create(role *entities.Role) (*entities.Role, erro
 	return role, nil
 }
 
-// FindAll returns all stored roles.
+// FindAll devuelve todos los roles almacenados.
 func (r *MemoryRoleRepository) FindAll() ([]*entities.Role, error) {
 	r.mu.Lock()
 	defer r.mu.Unlock()
@@ -59,7 +62,7 @@ func (r *MemoryRoleRepository) FindAll() ([]*entities.Role, error) {
 	return res, nil
 }
 
-// FindByID retrieves a role by its ID.
+// FindByID obtiene un rol por su identificador.
 func (r *MemoryRoleRepository) FindByID(id string) (*entities.Role, error) {
 	r.mu.Lock()
 	defer r.mu.Unlock()
@@ -88,7 +91,7 @@ func containsIgnoreCase(s, substr string) bool {
 	return strings.Contains(strings.ToLower(s), strings.ToLower(substr))
 }
 
-// FindPaginated returns a subset of roles applying pagination and filters.
+// FindPaginated devuelve un subconjunto de roles aplicando paginación y filtros.
 func (r *MemoryRoleRepository) FindPaginated(q *dto.PaginationQuery[dto.RoleFiltersDto]) (*dto.PaginatedResult[*entities.Role], error) {
 	r.mu.Lock()
 	defer r.mu.Unlock()
@@ -126,7 +129,7 @@ func (r *MemoryRoleRepository) FindPaginated(q *dto.PaginationQuery[dto.RoleFilt
 	return result, nil
 }
 
-// Update modifies a role identified by id.
+// Update modifica un rol identificado por su id.
 func (r *MemoryRoleRepository) Update(id string, data *entities.Role) (*entities.Role, error) {
 	r.mu.Lock()
 	defer r.mu.Unlock()
@@ -142,7 +145,7 @@ func (r *MemoryRoleRepository) Update(id string, data *entities.Role) (*entities
 	return existing, nil
 }
 
-// Delete removes a role from the repository.
+// Delete elimina un rol del repositorio.
 func (r *MemoryRoleRepository) Delete(id string) (*entities.Role, error) {
 	r.mu.Lock()
 	defer r.mu.Unlock()

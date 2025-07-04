@@ -8,7 +8,7 @@ var (
 	del    = Permission{Name: "delete", Title: "Eliminar"}
 )
 
-// ModulosPermisos defines modules and their permissions
+// ModulosPermisos define los módulos disponibles y sus permisos asociados.
 var ModulosPermisos = []Permission{
 	{
 		Name:        "roles",

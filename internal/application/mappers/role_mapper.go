@@ -1,3 +1,5 @@
+// Paquete mappers contiene funciones que transforman DTOs en entidades y
+// viceversa.
 package mappers
 
 import (
@@ -5,8 +7,8 @@ import (
 	"goserver/internal/domain/entities"
 )
 
-// MapCreateRoleDtoToRole converts a CreateRoleDto into a Role entity.
-// It applies default values for optional fields.
+// MapCreateRoleDtoToRole convierte un CreateRoleDto en una entidad Role.
+// Aplica valores por defecto para los campos opcionales.
 func MapCreateRoleDtoToRole(d dto.CreateRoleDto) *entities.Role {
 	editable := true
 	if d.Editable != nil {
@@ -25,8 +27,8 @@ func MapCreateRoleDtoToRole(d dto.CreateRoleDto) *entities.Role {
 	}
 }
 
-// MapUpdateRoleDtoToRole copies values from UpdateRoleDto into an existing Role.
-// Only fields provided in the DTO are updated.
+// MapUpdateRoleDtoToRole copia valores desde UpdateRoleDto sobre un Role existente.
+// Solo se actualizan los campos que vengan definidos en el DTO.
 func MapUpdateRoleDtoToRole(d dto.UpdateRoleDto, existing *entities.Role) *entities.Role {
 	if d.Name != nil {
 		existing.Name = *d.Name
